@@ -1,7 +1,7 @@
-
 #***************************************************************************
 #*                                                                         *
 #*   Copyright (c) 2012 Gael Ecorchard <galou_breizh@yahoo.fr>             *
+#*          Contributor: Izzatbek Mukhanov <izzatbek@gmail.com             *
 #*                                                                         *
 #*   This program is free software; you can redistribute it and/or modify  *
 #*   it under the terms of the GNU Lesser General Public License (LGPL)    *
@@ -21,9 +21,7 @@
 #*                                                                         *
 #***************************************************************************
 
-__title__ = "FreeCAD Symoro+ Workbench - Kinematics"
-__author__ = "Gael Ecorchard <galou_breizh@yahoo.fr>"
-__url__ = ["http://free-cad.sourceforge.net"]
+__title__ = "DrawBot v 1.0 beta - Symoro+"
 
 from joint import Joint
 from loop_solver import LoopSolver
@@ -36,15 +34,6 @@ def table_ok(table):
     sorted_table = sorted(table, cmp=cmp_antc)
     return (sorted_table == list(table))
 
-
-# def Ttomatrix(T):
-#     # TODO: remove FreeCAD dependency from this module
-#     from FreeCAD import Base
-#     # Flatten converts a matrix into an array and then it is converted into a list
-#     l = T.flatten().tolist()
-#     return Base.Matrix(*l)
-
-
 def get_joints_from_table(table):
     joints = []
     if not(table_ok):
@@ -54,7 +43,6 @@ def get_joints_from_table(table):
             antc = None
         else:
             antc = joints[row[0] - 1]
-        # TODO: redefine sameas by starting with index 0 (-1 <=> None)
         if (row[1] == 0):
             sameas = None
         else:
@@ -104,9 +92,9 @@ class Kinematics():
         self.mjoints = self.get_mjoints()
         # List of cut joints (With Virtual ones)
         self.cjoints = self.get_cjoints()
+
         from numpy import inf
         self.ub_prismatic = inf
-
         self.solver = LoopSolver(self.joints, self.pjoints, self.mjoints)
 
         # List of transformation matrices from the base
@@ -115,7 +103,6 @@ class Kinematics():
         for i in range(len(self.joints)):
             self.transforms.append(identity(4))
 
-    # TODO: ajoints as property
     def get_ajoints(self):
         """Return the list of active joints, always in the same order"""
         ajoints = []
@@ -124,7 +111,6 @@ class Kinematics():
                 ajoints.append(jnt)
         return ajoints
 
-    #TODO: pjoints as property
     def get_pjoints(self):
         """Return the list of passive joints, always in the same order"""
         pjoints = []
@@ -133,7 +119,6 @@ class Kinematics():
                 pjoints.append(jnt)
         return pjoints
 
-    # TODO: cjoints as property
     def get_cjoints(self):
         """Return the list of cut joints, always in the same order"""
         cjoints = []
@@ -142,7 +127,6 @@ class Kinematics():
                 cjoints += [jnt.sameas, jnt]
         return cjoints
 
-    # TODO: define q as property
     def get_q(self, index=None):
         """Returns the list of joint variables of active joints"""
         if (index is None):
@@ -171,9 +155,8 @@ class Kinematics():
             jnt.q = uniform(lb, ub)
 
     def get_joint_transforms(self, solve_loops=True):
+        """Return the joint frame calculated from the base"""
         from numpy import dot
-        """Return the joint frame calculated from the base
-        """
         cost = 0
         if solve_loops:
             cost = self.solver.solve()
@@ -185,6 +168,7 @@ class Kinematics():
         return self.transforms, cost
 
     def get_last_joints_indices(self):
+        """Return indices of the joints which are not antecedents of others"""
         indices = []
         antcs = [jnt.antc for jnt in self.joints]
         for i, jnt in enumerate(self.joints):

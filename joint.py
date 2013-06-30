@@ -1,4 +1,3 @@
-
 #***************************************************************************
 #*                                                                         *
 #*   Copyright (c) 2012 Gael Ecorchard <galou_breizh@yahoo.fr>             *
@@ -21,9 +20,8 @@
 #*                                                                         *
 #***************************************************************************
 
-__title__ = "FreeCAD Symoro+ Workbench - Joint"
+__title__ = "DrawBot v 1.0 beta for Symoro+"
 __author__ = "Gael Ecorchard <galou_breizh@yahoo.fr>"
-__url__ = ["http://free-cad.sourceforge.net"]
 
 # Joint types (sigma value)
 REVOLUTE_JOINT = 0

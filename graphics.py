@@ -1,4 +1,3 @@
-
 #***************************************************************************
 #*                                                                         *
 #*   Copyright (c) 2012 Izzat Mukhanov <izzatbek@gmail.com   >             *
@@ -21,19 +20,14 @@
 #*                                                                         *
 #***************************************************************************
 
-__title__ = "DrawBot 1.0 beta - Graphics"
+__title__ = "DrawBot v 1.0 beta for Symoro+"
 __author__ = "Izzat Mukhanov <izzatbek@gmail.com>"
-__url__ = ["http://vpython.org"]
 
 from kinematics import Kinematics
 from robots import table_inner_loop as table
 from create_window import display as c_display
 from visual import *
 import wx
-
-#TODO Writer
-#TODO Git
-#TODO Developer Guide
 
 class Graphics:
     def init_all(self, robot):

@@ -21,14 +21,11 @@
 #*                                                                         *
 #***************************************************************************
 
-__title__="FreeCAD Symoro+ Workbench - Read Symoro file (*.par)"
+__title__="DrawBot v 1.0 beta for Symoro+"
 __author__ = "Gael Ecorchard <galou_breizh@yahoo.fr>"
-__url__ = ["http://free-cad.sourceforge.net"]
 
 import ply.lex as lex
 import ply.yacc as yacc
-
-#MATT: Reads Symoro .par file and extracts the geometric parameter table
 
 def input_new(name):
 #    while True:
@@ -47,7 +44,7 @@ class ParLexer(object):
         self.lexer = lex.lex(module=self, **kwargs)
         self.lookup = {}
 
-	#M: keywords to look out for in the .par file
+	#keywords to look out for in the .par file
     keywords = [
         'NF', 'NL', 'NJ', 'Type',
         'Ant', 'Sigma', 'B', 'd', 'R',
@@ -67,7 +64,6 @@ class ParLexer(object):
         'NAME', 'JOINTVAR',
         ]
 
-	#M: operation characters
     literals = ['=','+','-','*','/', '(', ')', ',']
 
     # Many keywords are defined as brace-enclosed vectors (parameter list).
@@ -76,7 +72,7 @@ class ParLexer(object):
         ('paramlist', 'inclusive'),
     )
 
-	#M: tabs, spaces and return are ignorable characters
+
     t_ignore = " \t\r"
 
     # TODO: propose a modification to the official to explain how to switch
