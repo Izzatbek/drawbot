@@ -1,0 +1,42 @@
+(*******************************************)
+(*                 SYMORO+                 *)
+(*            DrawBot v1.0 beta            *)
+(*     Numerical parameters of a robot     *)
+(*                                         *)
+(* Institut de Recherche en Communications *)
+(*        et Cybernetique de Nantes        *)
+(*                                         *)
+(*            Equipe robotique             *)
+(*                                         *)
+(*                                         *)
+(*      web: www.irccyn.ec-nantes.fr       *)
+(*******************************************)
+
+(* File sr-400.par *)
+
+(* General parameters *)
+(* Robotname = 'SR-400' *)
+NF = 10
+NL = 8
+NJ = 9
+Type = 2 (* Closed *)
+
+(* Geometric parameters *)
+Ant = {
+        0,1,2,3,4,5,1,7,8,3}
+Sigma = {
+        0,0,0,0,0,0,0,0,0,2}
+B = {
+        0,0,0,0,0,0,0,0,0,0}
+d = {
+        0,400,800,-200,0,0,400,1000,800,-1000}
+R = {
+        0,0,0,1000,0,0,0,0,0,0}
+gamma = {
+        0,0,0,0,0,0,0,0,0,1.57079632679}
+Alpha = {
+        0,-1.57079632679,0,-1.57079632679,1.57079632679,-1.57079632679,-1.57079632679,0,0,0}
+Mu = {
+        1,1,0,0,1,1,1,0,0,0}
+Theta = {
+        0,-1.57079632679,0,0,0,0,0,0,0,0}

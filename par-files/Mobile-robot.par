@@ -1,0 +1,42 @@
+(*******************************************)
+(*                 SYMORO+                 *)
+(*            DrawBot v1.0 beta            *)
+(*     Numerical parameters of a robot     *)
+(*                                         *)
+(* Institut de Recherche en Communications *)
+(*        et Cybernetique de Nantes        *)
+(*                                         *)
+(*            Equipe robotique             *)
+(*                                         *)
+(*                                         *)
+(*      web: www.irccyn.ec-nantes.fr       *)
+(*******************************************)
+
+(* File Mobile-robot.par *)
+
+(* General parameters *)
+(* Robotname = 'Mobile-robot' *)
+NF = 7
+NL = 7
+NJ = 7
+Type = 1 (* Tree *)
+
+(* Geometric parameters *)
+Ant = {
+        0,1,2,3,3,3,4}
+Sigma = {
+        1,1,0,0,0,0,2}
+B = {
+        0,0,0,0,0,0,0}
+d = {
+        0,0,0,0,0,0,-10}
+R = {
+        10,10,0,0,10,-10,0}
+gamma = {
+        -1.57079632679,0,0,0,0,0,-0.5}
+Alpha = {
+        -1.57079632679,1.57079632679,0,0,0,0,0}
+Mu = {
+        1,1,1,1,1,1,0}
+Theta = {
+        -1.57079632679,1.57079632679,0,0,0,0,0}

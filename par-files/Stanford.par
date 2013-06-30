@@ -1,0 +1,42 @@
+(*******************************************)
+(*                 SYMORO+                 *)
+(*            DrawBot v1.0 beta            *)
+(*     Numerical parameters of a robot     *)
+(*                                         *)
+(* Institut de Recherche en Communications *)
+(*        et Cybernetique de Nantes        *)
+(*                                         *)
+(*            Equipe robotique             *)
+(*                                         *)
+(*                                         *)
+(*      web: www.irccyn.ec-nantes.fr       *)
+(*******************************************)
+
+(* File Stanford.par *)
+
+(* General parameters *)
+(* Robotname = 'Stanford' *)
+NF = 6
+NL = 6
+NJ = 6
+Type = 0 (* Simple *)
+
+(* Geometric parameters *)
+Ant = {
+        0,1,2,3,4,5}
+Sigma = {
+        0,0,1,0,0,0}
+B = {
+        0,0,0,0,0,0}
+d = {
+        0,0,0,0,0,0}
+R = {
+        0,200,400,0,0,0}
+gamma = {
+        0,0,0,0,0,0}
+Alpha = {
+        0,-1.57079632679,1.57079632679,0,-1.57079632679,1.57079632679}
+Mu = {
+        1,1,1,1,1,1}
+Theta = {
+        0,0,0,0,0,0}

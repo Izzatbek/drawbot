@@ -1,0 +1,44 @@
+(*******************************************)
+(*     SYMORO+ : Parameters of a robot     *)
+(*                                         *)
+(* Institut de Recherche en Communications *)
+(*        et Cybernetique de Nantes        *)
+(*                                         *)
+(*            Equipe robotique             *)
+(*                                         *)
+(*       1 rue de la Noë, BP 92101         *)
+(*          44321 NANTES Cedex 3           *)
+(*                                         *)
+(*      web: www.irccyn.ec-nantes.fr       *)
+(*******************************************)
+
+(* File RX90.par *)
+
+(* General parameters *)
+(* Robotname = 'RX90' *)
+NF = 6
+NL = 6
+NJ = 6
+Type = 0 (* Simple *)
+
+(* Geometric parameters *)
+Ant = {
+        0,1,2,3,4,5}
+Sigma  = {
+        0,0,0,0,0,0}
+B  = {
+        0,0,0,0,0,0}
+d  = {
+        0,0,d3,0,0,0}
+R  = {
+        0,0,0,RL4,0,0}
+gamma  = {
+        0,0,0,0,0,0}
+Alpha  = {
+        0,Pi/2,0,-Pi/2,Pi/2,-Pi/2}
+Mu  = {
+        1,1,0,1,1,1}
+Theta  = {
+        0,0,0,0,0,0}
+
+(* End of definition *)

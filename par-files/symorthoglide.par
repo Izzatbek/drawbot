@@ -1,0 +1,139 @@
+(*******************************************)
+(*     SYMORO+ : Parameters of a robot     *)
+(*                                         *)
+(* Institut de Recherche en Communications *)
+(*        et Cybernetique de Nantes        *)
+(*                                         *)
+(*            Equipe robotique             *)
+(*                                         *)
+(*       1 rue de la Noë, BP 92101         *)
+(*          44321 NANTES Cedex 3           *)
+(*                                         *)
+(*      web: www.irccyn.ec-nantes.fr       *)
+(*******************************************)
+
+(* File Orthoglide.par *)
+
+(* General parameters *)
+(* Robotname = 'Orthoglide' *)
+NF = 15
+NL = 15
+NJ = 15
+Type = 1 (* Tree *)
+
+(* Geometric parameters *)
+Ant = {
+        0,0,0,1,4,5,6,2,8,9,
+        10,3,12,13,14}
+Sigma  = {
+        1,1,1,0,0,0,0,0,0,0,
+        0,0,0,0,0}
+B  = {
+        0,a,a,0,0,0,0,0,0,0,
+        0,0,0,0,0}
+d  = {
+        0,0,0,0,0,d4,0,0,0,d4,
+        0,0,0,d4,0}
+R  = {
+        q1,-a + q2,-a + q3,0,0,0,0,0,0,0,
+        0,0,0,0,0}
+gamma  = {
+        0,Pi/2,0,0,0,0,0,0,0,0,
+        0,0,0,0,0}
+Alpha  = {
+        0,Pi/2,-Pi/2,-Pi/2,-Pi/2,0,Pi/2,-Pi/2,-Pi/2,0,
+        Pi/2,-Pi/2,-Pi/2,0,Pi/2}
+Mu  = {
+        1,1,1,1,1,1,1,1,1,1,
+        1,1,1,1,1}
+Theta  = {
+        0,0,-Pi/2,q4,q5,q6,q7,q8,q9,q10,
+        q11,q12,q13,q14,q15}
+
+(* Dynamic parameters and external forces *)
+XX = {
+        XX11,XX12,XX13,XX21,XX31,XX41,XX51,XX22,XX32,XX42,
+        XX52,XX23,XX33,XX43,XX53}
+XY  = {
+        XY11,XY12,XY13,XY21,XY31,XY41,XY51,XY22,XY32,XY42,
+        XY52,XY23,XY33,XY43,XY53}
+XZ  = {
+        XZ11,XZ12,XZ13,XZ21,XZ31,XZ41,XZ51,XZ22,XZ32,XZ42,
+        XZ52,XZ23,XZ33,XZ43,XZ53}
+YY  = {
+        YY11,YY12,YY13,YY21,YY31,YY41,YY51,YY22,YY32,YY42,
+        YY52,YY23,YY33,YY43,YY53}
+YZ  = {
+        YZ11,YZ12,YZ13,YZ21,YZ31,YZ41,YZ51,YZ22,YZ32,YZ42,
+        YZ52,YZ23,YZ33,YZ43,YZ53}
+ZZ  = {
+        ZZ11,ZZ12,ZZ13,ZZ21,ZZ31,ZZ41,ZZ51,ZZ22,ZZ32,ZZ42,
+        ZZ52,ZZ23,ZZ33,ZZ43,ZZ53}
+MX  = {
+        MX11,MX12,MX13,MX21,MX31,MX41,MX51,MX22,MX32,MX42,
+        MX52,MX23,MX33,MX43,MX53}
+MY  = {
+        MY11,MY12,MY13,MY21,MY31,MY41,MY51,MY22,MY32,MY42,
+        MY52,MY23,MY33,MY43,MY53}
+MZ  = {
+        MZ11,MZ12,MZ13,MZ21,MZ31,MZ41,MZ51,MZ22,MZ32,MZ42,
+        MZ52,MZ23,MZ33,MZ43,MZ53}
+M  = {
+        M11,M12,M13,M21,M31,M41,M51,M22,M32,M42,
+        M52,M23,M33,M43,M53}
+IA  = {
+        IA11,IA12,IA13,IA21,IA31,IA41,IA51,IA22,IA32,IA42,
+        IA52,IA23,IA33,IA43,IA53}
+FV  = {
+        FV11,FV12,FV13,FV21,FV31,FV41,FV51,FV22,FV32,FV42,
+        FV52,FV23,FV33,FV43,FV53}
+FS  = {
+        FS11,FS12,FS13,FS21,FS31,FS41,FS51,FS22,FS32,FS42,
+        FS52,FS23,FS33,FS43,FS53}
+FX  = {
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0}
+FY  = {
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0}
+FZ  = {
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0}
+CX  = {
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0}
+CY  = {
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0}
+CZ  = {
+        0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0}
+
+(* Joints velocity and acceleration *)
+QP = {
+        qd1,qd2,qd3,qd4,qd5,qd6,qd7,qd8,qd9,qd10,
+        qd11,qd12,qd13,qd14,qd15}
+QDP  = {
+        qdd1,qdd2,qdd3,qdd4,qdd5,qdd6,qdd7,qdd8,qdd9,qdd10,
+        qdd11,qdd12,qdd13,qdd14,qdd15}
+
+(* Speed and acceleration of the base *)
+W0 = {
+        0,0,0}
+WP0  = {
+        0,0,0}
+V0  = {
+        0,0,0}
+VP0  = {
+        0,0,0}
+
+(* Matrix Z *)
+Z = {
+        1,0,0,0,0,1,0,0,0,0,
+        1,0,0,0,0,1}
+
+(* Acceleration of gravity *)
+G = {
+        0,g2,0}
+
+(* End of definition *)

@@ -1,0 +1,42 @@
+(*******************************************)
+(*                 SYMORO+                 *)
+(*            DrawBot v1.0 beta            *)
+(*     Numerical parameters of a robot     *)
+(*                                         *)
+(* Institut de Recherche en Communications *)
+(*        et Cybernetique de Nantes        *)
+(*                                         *)
+(*            Equipe robotique             *)
+(*                                         *)
+(*                                         *)
+(*      web: www.irccyn.ec-nantes.fr       *)
+(*******************************************)
+
+(* File Loop-inside-loop.par *)
+
+(* General parameters *)
+(* Robotname = 'Loop-inside-loop' *)
+NF = 10
+NL = 6
+NJ = 8
+Type = 2 (* Closed *)
+
+(* Geometric parameters *)
+Ant = {
+        0,1,2,3,1,5,3,4,5,6}
+Sigma = {
+        2,0,0,0,0,0,0,0,2,2}
+B = {
+        0,0,0,0,0,0,0,0,0,0}
+d = {
+        0,0,100,100,100,100,100,100,100,100}
+R = {
+        0,0,0,0,0,0,0,0,0,0}
+gamma = {
+        0,0,1.57079632679,0.785398163397,0,0.785398163397,0,-0.785398163397,1.57079632679,0.785398163397}
+Alpha = {
+        0,0,0,0,0,0,0,0,0,0}
+Mu = {
+        0,1,0,0,0,0,0,0,0,0}
+Theta = {
+        0,0,0,0,0,0,0,0,0,0}
