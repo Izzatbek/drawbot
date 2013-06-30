@@ -80,7 +80,6 @@ class EditingWindow():
         for id, label, helpText, handler in \
             [(wx.ID_ABOUT, '&About', 'Information about this program',
                 self.OnAbout),
-             (wx.ID_OPEN, '&Open', 'Open a new file', self.OnOpen),
              (wx.ID_SAVE, '&Save', 'Save the current file', self.CheckIfNew),
              (wx.ID_SAVEAS, 'Save &As', 'Save the file under a different name',
                 self.OnSaveAs),
