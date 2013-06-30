@@ -99,7 +99,7 @@ class EditingWindow():
     def SetTitle(self):
         # MainWindow.SetTitle overrides wx.Frame.SetTitle, so we have to
         # call it using super:
-        self.w.win.SetTitle('Editor: %s'%self.filename)
+        self.w.win.SetTitle('DrawBot - Editor: %s'%self.filename)
 
 
     # Helper methods:
@@ -109,7 +109,7 @@ class EditingWindow():
             used in both the save file dialog as well as in the open
             file dialog. '''
         return dict(message='Choose a file', defaultDir=self.dirname,
-                    wildcard='*.geo')
+                    wildcard='*.par')
 
     def askUserForFilename(self, **dialogOptions):
         dialog = wx.FileDialog(self.w.win, **dialogOptions)
@@ -169,16 +169,21 @@ class EditingWindow():
             #update table
         self.geo_panel.ChangeParam(event)
         textfile = open(os.path.join(self.dirname, self.filename), 'w')
-        textfile.write(str(self.NJ)+'\n'+str(self.B)+'\n\n')
-        for j in range(self.NJ+self.B):
-            for row in range(10):
-                input = self.geo_panel.geo_table[j][row]
-                #for gamma, alpha, theta: save in radians
-                if ((row == 4) | (row == 6) | (row == 8)):
-                    input = input*pi/180
-                textfile.write(str(input))
-                textfile.write('\n')
-            textfile.write('\n')
+##        textfile.write(str(self.NJ)+'\n'+str(self.B)+'\n\n')
+##        for j in range(self.NJ+self.B):
+##            for row in range(10):
+##                input = self.geo_panel.geo_table[j][row]
+##                #for gamma, alpha, theta: save in radians
+##                if ((row == 4) | (row == 6) | (row == 8)):
+##                    input = input*pi/180
+##                textfile.write(str(input))
+##                textfile.write('\n')
+##            textfile.write('\n')
+        tableRad = self.TableRadians(self.geo_panel.geo_table)
+        print("TableRad:")
+        print(tableRad)
+        from write_par import ParWriter
+        textfile.write(ParWriter.par_string(tableRad, self.filename, self.filename))
         textfile.close()
         self.lastsaved=copy(self.geo_panel.geo_table)
         
@@ -209,18 +214,7 @@ class EditingWindow():
         # Disable tabs!
 
         self.geo_panel.ChangeParam(event)
-        tableRadians = []
-        for j in range(self.NJ+self.B):
-            jtuple = ()
-            for row in range(10):
-                item = self.geo_panel.geo_table[j][row]
-                #for gamma, alpha, theta: save in radians
-                if ((row == 4) | (row == 6) | (row == 8)):
-                    item = item*pi/180
-                jtuple = jtuple+(item,)
-            tableRadians.append(jtuple)
-        print(tableRadians)
-
+        tableRadians = self.TableRadians(self.geo_panel.geo_table)
         if self.graphicsCalled:
             self.SimControl.set_robot(robot=tableRadians)
         else:
@@ -246,6 +240,20 @@ class EditingWindow():
             self.w.SizerFit(self.mainSizer)
             self.btnVisualise.SetLabel("Visualise")
             self.geo_panel.EnablePanel()
+
+    def TableRadians(self,table):
+        tableRadians = []
+        for j in range(self.NJ+self.B):
+            jtuple = ()
+            for row in range(10):
+                item = self.geo_panel.geo_table[j][row]
+                #for gamma, alpha, theta: save in radians
+                if ((row == 4) | (row == 6) | (row == 8)):
+                    item = item*pi/180
+                jtuple = jtuple+(item,)
+            tableRadians.append(jtuple)
+        return tableRadians
+        
         
 
 def CreateEditor(NJ=6, B=0, table=None, name='noname', dirname='', saved=False):
