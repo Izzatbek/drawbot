@@ -46,6 +46,14 @@ class Graphics:
         self.scene.autocenter = False
 
     def __init__(self, panel, sizer, change_function, robot=table, width=600, height=600, x=900, y=0):
+        """Arguments:
+        panel - wxPanel on UI-elements will be placed
+        sizer - wxBoxSizer (to make proper layout)
+        change_function - a pointer to the function which is called
+            when a particular joint is selected in order to show its geometrical parameters
+        robot - a list or tuple of tuples representing each row of the robot description table
+        width, height, x, y - self-explanatory
+        """
         self.p = panel
         self.main_sizer = sizer
         self.scene = c_display(x=x, y=y, width=width, height=height, forward=vector(0,1,0), background=(1,1,1), title="Simulation")
@@ -156,7 +164,7 @@ class Graphics:
             self.p.SetSizerAndFit(self.main_sizer)
 
     def show_frames(self, list):
-        """ This function displays frames which are in the list """
+        """Diplays frames which are in the list """
         selected_frames = [f for i, f in enumerate(self.frames) if i in list]
         for i, obj in enumerate(self.frames_arrows):
             obj.visible = True if obj.frame in selected_frames else False
@@ -172,7 +180,7 @@ class Graphics:
         self.prismatic_links = []
 
     def show_end_effectors(self, show=True):
-        """This function draws or removes end-effectors (Which are just joints that are not antecedants of other joints and are not cut joints
+        """Draws or removes end-effectors (Which are just joints that are not antecedents of other joints and are not cut joints
         """
         if show:
             indices = self.kinematics.get_last_joints_indices()
@@ -482,20 +490,14 @@ class Graphics:
         self.scene.unbind('mousemove', self.move)
         self.scene.unbind('mouseup', self.drop)
 
-class TestWindow:
-    def __init__(self, width=500, height=500):
-        w = window(width=900, height=600, menus=True, title='Robot')
-
-        self.p = w.panel # Refers to the full region of the window in which to place widgets
-
-        #wx.ComboBox(self.p, size=(50, -1), style=wx.CB_READONLY, choices=["0","1","2"])
-        mainSizer = wx.BoxSizer(wx.HORIZONTAL)
-        mainSizer.AddSpacer(600)
-        from robots import table_scara
-        Graphics(panel=self.p, sizer=mainSizer, change_function=self.change)
-
-    def change(self, id):
-        print id
-
 if __name__ == "__main__":
-    TestWindow()
+    class TestWindow:
+        def __init__(self, width=500, height=500):
+            w = window(width=900, height=600, menus=True, title='Robot')
+            self.p = w.panel
+            mainSizer = wx.BoxSizer(wx.HORIZONTAL)
+            mainSizer.AddSpacer(600)
+            Graphics(panel=self.p, sizer=mainSizer, change_function=self.change)
+
+        def change(self, id):
+            print id

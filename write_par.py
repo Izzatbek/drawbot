@@ -54,19 +54,10 @@ class ParWriter:
             return 'Type = 1 (* Tree *)\n\n'
         return 'Type = 0 (* Serial *)\n\n'
 
-    # @classmethod
-    # def convert_to_radians(c, table):
-    #     for row in table:
-    #         row[c.Alpha] *= pi/180
-    #         row[c.gamma] *= pi/180
-    #         row[c.Theta] *= pi/180
-    #     return table
-
     @classmethod
     def geo_string(c, table):
         """Forms the output string for geometrical parameters
         """
-        # table = c.convert_to_radians(table)
         output = '(* Geometric parameters *)\n'
         for par in c.geom_par:
             cur = par + ' = {\n        '
