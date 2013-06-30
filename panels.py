@@ -37,7 +37,7 @@ class GeometricPanel(wx.Panel):
                     antec = j-1
                     sameas = 0
                     sigma = 0
-                geo_row = (antec, sameas, 0, sigma, 0, 0, 0, 0, 0, 0)
+                geo_row = (antec, sameas, 1, sigma, 0, 0, 0, 0, 0, 0)
                 self.geo_table.append(geo_row)
         else:
             self.geo_table = table
@@ -331,7 +331,7 @@ class GeometricPanel(wx.Panel):
         self.ChangeParam(wx.EVT_BUTTON)
 
     def ChangeJ(self, J):
-        self.valj.SetSelection(J - 1)
+        self.valj.SetSelection(J-1)
         self.ChangeParam(wx.EVT_BUTTON)
 
 
