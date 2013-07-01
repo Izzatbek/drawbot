@@ -24,7 +24,7 @@ __title__ = "DrawBot v 1.0 beta for Symoro+"
 __author__ = "Izzat Mukhanov <izzatbek@gmail.com>"
 
 from kinematics import Kinematics
-from robots import table_inner_loop as table
+from robots import table_rx90 as table
 from create_window import display as c_display
 from visual import *
 import wx
@@ -172,7 +172,7 @@ class Graphics:
     def init_lists(self):
         """This function is called whenever the objects in the display are redrawn.
         """
-        self.objs = []
+        self.joint_objs = []
         self.frames_arrows = []
         self.end_frames = []
         self.frames = []
@@ -185,7 +185,7 @@ class Graphics:
         if show:
             indices = self.kinematics.get_last_joints_indices()
             for index in indices:
-                obj = self.objs[index]
+                obj = self.joint_objs[index]
                 direction = self.direction(self.kinematics.joints[index])
                 eframe = frame(frame=obj.frame, axis=(direction, 0, 0))
                 self.end_frames.append(eframe)
@@ -302,14 +302,14 @@ class Graphics:
             else:
                 obj = sphere(frame=f, radius=self.len_obj/6., color=color.green, opacity=self.opacity)
             self.put_frame(f, i)
-            self.objs.append(obj)
+            self.joint_objs.append(obj)
 
             # If representation is exploded (scientific) and 2 consecutive frames have the same position
             if scientific and jnt.d == 0 and jnt.r == 0:
                 # Shift If:
                 # the previous frame was the first
                 if i == 1:
-                    self.objs[i-1].pos -= (3*self.len_obj/2,0,0)
+                    self.joint_objs[i-1].pos -= (3*self.len_obj/2,0,0)
                     cylinder(frame=prevF, axis=(-3*self.len_obj/2, 0, 0), radius=self.rad_con, opacity=0.5)
                 # or current frame is the last
                 elif self.kinematics.is_last_joint(jnt):
@@ -321,13 +321,13 @@ class Graphics:
                     # previous was coaxial prismatic with r != 0
                     if not jnt.antc.isrevolute() and prevF.axis == f.axis:
                         shiftp = (abs(jnt.antc.r) - 2*self.len_obj)/3
-                        self.objs[prevIndex].pos -= vector(2*shiftp + 3* self.len_obj/2,0,0)*self.direction(jnt.antc)
+                        self.joint_objs[prevIndex].pos -= vector(2*shiftp + 3* self.len_obj/2,0,0)*self.direction(jnt.antc)
                     # previous was revolute with r != 0
                     else:
-                        self.objs[prevIndex].pos -= vector(jnt.antc.r/2,0,0)
+                        self.joint_objs[prevIndex].pos -= vector(jnt.antc.r/2,0,0)
                 # or the one before previous was prismatic
                 elif shiftp:
-                    self.objs[prevIndex].pos -= vector(shiftp + self.len_obj/2,0,0)*self.direction(jnt.antc)
+                    self.joint_objs[prevIndex].pos -= vector(shiftp + self.len_obj/2,0,0)*self.direction(jnt.antc)
                     shiftp = 0
         self.show_end_effectors(self.cb_end_effs.Value)
 
@@ -356,7 +356,7 @@ class Graphics:
         """Slider event handler. Changes opacity of all joints
         """
         self.opacity = evt.EventObject.GetValue()/100.
-        for obj in self.objs:
+        for obj in self.joint_objs:
             obj.opacity = self.opacity
 
     def world_frame(self, evt):
@@ -463,13 +463,13 @@ class Graphics:
         """If a joint object is selected, highlights an object and shows only its frame
         """
         self.show_frames(self.check_list.GetChecked())
-        for joint in self.objs:
+        for joint in self.joint_objs:
             joint.color = color.yellow if isinstance(joint, cylinder) else color.orange if isinstance(joint, box) else color.green
         obj = evt.pick
-        if obj in self.objs:
+        if obj in self.joint_objs:
             obj.color = (obj.color[0]-0.3, obj.color[1]-0.3, obj.color[2]-0.3)
             f = obj.frame
-            self.ch_func(self.objs.index(obj) + 1)
+            self.ch_func(self.joint_objs.index(obj) + 1)
             for o in self.frames_arrows:
                 if o.frame != f:
                     o.visible = False
@@ -501,3 +501,5 @@ if __name__ == "__main__":
 
         def change(self, id):
             print id
+
+    TestWindow()

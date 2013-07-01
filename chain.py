@@ -2,34 +2,34 @@
 # -*- encoding: utf-8 -*-
 
 def get_base(joints):
-    """Return the base joint, i.e. joints without antecedant"""
+    """Return the base joint, i.e. joints without antecedent"""
     base = None
     for jnt in joints:
         if not(jnt.antc in joints):
-		# if antecedant is not in the joint list ==> base joint
+		    # if antecedent is not in the joint list ==> base joint
             base = jnt
     return base
 
 def get_tools(joints):
-    """Return the end joints, i.e. joints that are antecedant of nothing"""
+    """Return the end joints, i.e. joints that are antecedent of nothing"""
 	# list of antecedents
     antc = [jnt.antc for jnt in joints]
-    # A joint is an end joint if is antecedant of no other joints.
-	# for each joint, if it is not in the antecedant list ==> end effector
+    # A joint is an end joint if is antecedent of no other joints.
+	# for each joint, if it is not in the antecedent list ==> end effector
     tools = [jnt for jnt in joints if not(jnt in antc)]
     return tools
 
 def get_children(joints, joint):
-    """Return a list of joints which have the given joint as antecedant"""
+    """Return a list of joints which have the given joint as antecedent"""
 	# list of branches from joint
     return [jnt for jnt in joints if (jnt.antc is joint)]
 
 def is_unique_child(joint, joints):
-    """Return True is no other joint has the same antecedant"""
-	# list of antecedants
+    """Return True is no other joint has the same antecedent"""
+	# list of antecedents
     antc = [jnt.antc for jnt in joints]
 	# counts number of times joint.antc occurs in the list
-	#if 1, then the joint is not a branch of its antecedant
+	#if 1, then the joint is not a branch of its antecedent
     return (antc.count(joint.antc) == 1)
 
 # function is recursive. list starts from the base to the endeffector
@@ -54,12 +54,12 @@ class Chain(object):
 
     @property
     def base(self):
-        """The base joint, i.e. joints without antecedant"""
+        """The base joint, i.e. joints without antecedent"""
         return self._base
 
     @property
     def tools(self):
-        """The end joints, i.e. joints that are antecedant of nothing"""
+        """The end joints, i.e. joints that are antecedent of nothing"""
         return self._tools
 
 	# recursive function
@@ -86,11 +86,3 @@ class Chain(object):
 	# defines entire robot as one chain from the base
     def get_chain(self):
         return self.get_subchain_from(self.base)
-
-    def get_mjoints(self):
-        """Return a list of non-fixed joints"""
-        mjoints = []
-        for jnt in self.joints:
-            if jnt.ismoving():
-                mjoints.append(jnt)
-        return mjoints
