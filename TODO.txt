@@ -6,3 +6,4 @@
 6. Dynamic parameters
 7. Save configuration button
 8. Visualize pressed a lot of time in the short period of time
+9. Assign back the original radius for revolute joints

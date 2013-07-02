@@ -86,6 +86,7 @@ class Graphics:
         self.cb_end_effs.Bind(wx.EVT_CHECKBOX, self.end_effector_change)
         gridControl.Add(self.cb_end_effs, pos=(1,0), flag=wx.ALIGN_CENTER_VERTICAL)
 
+        self.world_frame = frame(axis=(0,0,1), pos=(0,0,0), up=(1,0,0))
         self.cb_world = wx.CheckBox(self.p, label="Base frame")
         self.cb_world.SetValue(False)
         self.cb_world.Bind(wx.EVT_CHECKBOX, self.show_world_frame)
