@@ -80,9 +80,12 @@ class EditingWindow():
         for id, label, helpText, handler in \
             [(wx.ID_ABOUT, '&About', 'Information about this program',
                 self.OnAbout),
+             (None, None, None, None),
+             (wx.ID_NEW, '&New', 'Create a new robot definition', self.OnNew),
+             (None, None, None, None),
              (wx.ID_SAVE, '&Save', 'Save the current file', self.CheckIfNew),
              (wx.ID_SAVEAS, 'Save &As', 'Save the file under a different name',
-                self.OnSaveAs),
+                self.OnSave),
              (None, None, None, None),
              (wx.ID_EXIT, 'E&xit', 'Terminate the program', self.OnExit)]:
             if id == None:
@@ -156,12 +159,24 @@ class EditingWindow():
         else:
             self.w._OnExitApp(event)  # Close the main window.
 
-    def OnOpen(self, event):
-        if self.askUserForFilename(style=wx.OPEN,
-                                   **self.defaultFileDialogOptions()):
-            textfile = open(os.path.join(self.dirname, self.filename), 'r')
-            self.control.SetValue(textfile.read())
-            textfile.close()
+    def OnNew(self, event):
+        self.geo_panel.ChangeParam(event)
+        if (self.CheckIfChanges() | (not(self.saved))):
+            dialog = wx.MessageDialog(self.w.win, 'Close current robot without saving?',
+                                      'Unsaved Changes', wx.YES_NO|wx.NO_DEFAULT)
+            if dialog.ShowModal() == wx.ID_YES:
+                if self.graphicsCalled:
+                    self.SimControl.scene.visible=False
+                self.w.win.Hide()
+                from start import StartWindow
+                StartWindow()
+            dialog.Destroy()
+        else:
+            if self.graphicsCalled:
+                self.SimControl.scene.visible=False
+            self.w.win.Hide()
+            from start import StartWindow
+            StartWindow()
 
     def OnSave(self, event):
         #Save current robot parameters

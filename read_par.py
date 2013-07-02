@@ -26,6 +26,7 @@ __author__ = "Gael Ecorchard <galou_breizh@yahoo.fr>"
 
 import ply.lex as lex
 import ply.yacc as yacc
+import wx
 
 def input_new(name):
 #    while True:
@@ -36,13 +37,68 @@ def input_new(name):
 #        else:
 #            break
 #    return v
-    return name
+    ask = AskVariables(parent=None, variable=name)
+    if ask.ShowModal() == wx.ID_OK:
+        print("Got value")
+        value = ask.GetValues()
+    ask.Destroy()
+    return value
+
+
+class AskVariables(wx.Dialog):
+
+    def __init__(self, parent=None, variable=None):
+            super(AskVariables, self).__init__(parent, style=wx.SYSTEM_MENU|wx.CAPTION)
+            self.variable = variable
+            self.InitUI()
+            self.SetTitle("Symbolic Variable Detected")
+
+    def InitUI(self):
+        self.mainSizer = wx.BoxSizer(wx.VERTICAL)
+        self.p = wx.Panel(self)
+
+        #Instruction
+        instr = wx.StaticText(self, label="A symbolic variable was detected\nwhile loading the .par file. Please provide\na numerical value for the following:")
+
+        #input
+        Grid = wx.GridBagSizer(hgap=5, vgap=5)
+        var_lbl = wx.StaticText(self, label=self.variable+":", style=wx.ALIGN_RIGHT)
+        self.var_val = wx.SpinCtrlDouble(self, initial=0, value="0", size=(100,-1), min=-999999, max=999999)
+        self.var_units = wx.ComboBox(self, size=(50,-1), choices=["mm", unichr(186)], style=wx.CB_READONLY)
+        Grid.Add(var_lbl, pos=(0,0), flag=wx.ALIGN_RIGHT)
+        Grid.Add(self.var_val, pos=(0,1), flag=wx.ALIGN_LEFT)
+        Grid.Add(self.var_units, pos=(0,2), flag=wx.ALIGN_LEFT)
+        
+        #OK button
+        okButton = wx.Button(self, wx.ID_OK, "OK")
+        okButton.Bind(wx.EVT_BUTTON, self.OnOK)
+
+        #layout elements
+        self.mainSizer.Add(instr, flag=wx.ALL|wx.ALIGN_CENTER, border = 20)
+        self.mainSizer.AddSpacer(10)
+        self.mainSizer.Add(Grid, flag=wx.ALIGN_CENTER)
+        self.mainSizer.AddSpacer(20)
+        self.mainSizer.Add(okButton, flag=wx.ALL|wx.ALIGN_RIGHT, border = 20)
+
+        self.SetSizerAndFit(self.mainSizer)
+
+    def OnOK(self, e):
+        print("OK pressed")
+        self.EndModal(wx.ID_OK)
+
+    def GetValues(self):
+        if (self.var_units.GetSelection() == 1):
+            from math import pi
+            return self.var_val.GetValue()*pi/180
+        else:
+            return self.var_val.GetValue()
 
 
 class ParLexer(object):
     def __init__(self, **kwargs):
         self.lexer = lex.lex(module=self, **kwargs)
         self.lookup = {}
+        self.geo_done = False
 
 	#keywords to look out for in the .par file
     keywords = [
@@ -95,6 +151,11 @@ class ParLexer(object):
     from ply.lex import TOKEN
     @TOKEN(_keyword_pattern)
     def t_KEYWORD(self, t):
+        #set flag to stop asking for values once geom.par. are read
+        print(t.value)
+        if t.value=='XX':
+            self.geo_done = True
+            print('found XX')
         return t
 
     # Within braces keywords are treated as names, though this is not supported
@@ -131,7 +192,10 @@ class ParLexer(object):
         try:
             t.value = self.lookup[t.value]
         except KeyError:
-            val = input_new(t.value)
+            if self.geo_done == False:
+                val = input_new(t.value)
+            else:
+                val = t.value
             self.lookup[t.value] = val
             t.value = val
             t.type = 'NAME'

@@ -92,16 +92,16 @@ class GeometricPanel(wx.Panel):
 
         #grid 2 elements
             #labels
-        self.lblj = wx.StaticText(self, label="j:")
-        self.lblantec = wx.StaticText(self, label="a:")
-        self.lblmu = wx.StaticText(self, label="mu:")
-        self.lblsigma = wx.StaticText(self, label="sigma:")
-        self.lblgamma = wx.StaticText(self, label="gamma:")
-        self.lblalpha = wx.StaticText(self, label="alpha:")
-        self.lbltheta = wx.StaticText(self, label="theta:")
-        self.lblb = wx.StaticText(self, label="b:")
-        self.lbld = wx.StaticText(self, label="d:")
-        self.lblr = wx.StaticText(self, label="r:")
+        self.lblj = wx.StaticText(self, label="j:", style=wx.ALIGN_RIGHT)
+        self.lblantec = wx.StaticText(self, label="a:", style=wx.ALIGN_RIGHT)
+        self.lblmu = wx.StaticText(self, label="mu:", style=wx.ALIGN_RIGHT)
+        self.lblsigma = wx.StaticText(self, label="sigma:", style=wx.ALIGN_RIGHT)
+        self.lblgamma = wx.StaticText(self, label="gamma:", style=wx.ALIGN_RIGHT)
+        self.lblalpha = wx.StaticText(self, label="alpha:", style=wx.ALIGN_RIGHT)
+        self.lbltheta = wx.StaticText(self, label="theta (off.):", style=wx.ALIGN_RIGHT)
+        self.lblb = wx.StaticText(self, label="b:", style=wx.ALIGN_RIGHT)
+        self.lbld = wx.StaticText(self, label="d:", style=wx.ALIGN_RIGHT)
+        self.lblr = wx.StaticText(self, label="r (off.):", style=wx.ALIGN_RIGHT)
 
             #droplists
         frameList = [str(j+1) for j in range (self.NF)]
@@ -147,9 +147,6 @@ class GeometricPanel(wx.Panel):
         self.lblftype = wx.StaticText(self, label="Frame Type:")
         self.valftype = wx.StaticText(self, label="")
         
-            #initialise values
-        self.LoadValues()
-        
             #grid layout
         grid2.Add(self.lblj,     pos=(0,0), flag=wx.ALIGN_CENTER_VERTICAL)
         grid2.Add(self.lblftype,  pos=(0,3), flag=wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, span=(1,3))
@@ -178,24 +175,33 @@ class GeometricPanel(wx.Panel):
         grid2.Add(self.dg2, pos=(3,5), flag=wx.ALIGN_CENTER_VERTICAL)
         grid2.Add(self.dg3, pos=(4,5), flag=wx.ALIGN_CENTER_VERTICAL)
 
-        
         grid2.Add(self.lblb,pos=(2,7), flag=wx.ALIGN_CENTER_VERTICAL)
         grid2.Add(self.lbld,pos=(3,7), flag=wx.ALIGN_CENTER_VERTICAL)
         grid2.Add(self.lblr,pos=(4,7), flag=wx.ALIGN_CENTER_VERTICAL)
 
-        grid2.Add(self.valb,pos=(2,8), flag=wx.ALIGN_CENTER_VERTICAL)
-        grid2.Add(self.vald,pos=(3,8), flag=wx.ALIGN_CENTER_VERTICAL)
-        grid2.Add(self.valr,pos=(4,8), flag=wx.ALIGN_CENTER_VERTICAL)
+        #small space for r off.
+        grid2.Add((20,20), pos=(2,8), span=(3,1))
+        
+        grid2.Add(self.valb,pos=(2,9), flag=wx.ALIGN_CENTER_VERTICAL)
+        grid2.Add(self.vald,pos=(3,9), flag=wx.ALIGN_CENTER_VERTICAL)
+        grid2.Add(self.valr,pos=(4,9), flag=wx.ALIGN_CENTER_VERTICAL)
 
-        grid2.Add(self.mm1, pos=(2,9), flag=wx.ALIGN_CENTER_VERTICAL)
-        grid2.Add(self.mm2, pos=(3,9), flag=wx.ALIGN_CENTER_VERTICAL)
-        grid2.Add(self.mm3, pos=(4,9), flag=wx.ALIGN_CENTER_VERTICAL)
+        grid2.Add(self.mm1, pos=(2,10), flag=wx.ALIGN_CENTER_VERTICAL)
+        grid2.Add(self.mm2, pos=(3,10), flag=wx.ALIGN_CENTER_VERTICAL)
+        grid2.Add(self.mm3, pos=(4,10), flag=wx.ALIGN_CENTER_VERTICAL)
 
         #sizers
         mainSizer.Add(grid1, 0, wx.ALL, 5)
         mainSizer.AddSpacer(10)
         mainSizer.Add(grid2, 0, wx.ALL, 5)
         self.SetSizerAndFit(mainSizer)
+
+        #initialise values
+        from visual import rate
+        rate(1000)
+        self.LoadValues()
+        
+
 
     def ChangeParam(self, event):
 
@@ -261,6 +267,16 @@ class GeometricPanel(wx.Panel):
         self.valb.SetValue(row[5])
         self.vald.SetValue(row[7])
         self.valr.SetValue(row[9])
+
+        if row[3]==0:
+            self.lbltheta.SetLabel("theta off.:")
+            self.lblr.SetLabel("r:")
+        elif row[3]==1:
+            self.lbltheta.SetLabel("theta:")
+            self.lblr.SetLabel("r off.:")
+        else:
+            self.lbltheta.SetLabel("theta off.:")
+            self.lblr.SetLabel("r off.:")
 
         frameTypes=["Normal Joint","End Joint","Cut Joint","Virtual Frame"]
         if self.currJ>self.NJ:

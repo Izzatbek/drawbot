@@ -141,125 +141,13 @@ class StartWindow():
             #self.control.SetValue(f.read())
             #f.close()
             print(table)
-            print('\n')
-            table = self.CheckForVariables(NF,table)
-            print(table)
             CreateEditor(NJ, NF-NJ, table, robot_name)
             print((NJ, NF-NJ, table, robot_name))
             self.w.Destroy()
         dlg.Destroy()
 
-    def CheckForVariables(self,NF,table):
-#        for j in range(NF):
-#            row = table[j]
-#            if row[2] == 0:
-#                table[j] = row[0:8] + (0,row[9])
-#            elif row[2] == 1:
-#                table[j] = row[0:9] + (0,)
-#            else:
-#                table[j] = row[0:8] + (0,0)
-        print(table)
-        print('\n')
-        
-        variables = []
-        var_pos = []
-        for j in range(NF):
-            for row in range(10):
-                if isinstance(table[j][row], str):
-                    variables.append(table[j][row])
-                    var_pos.append((j,row))
-
-        print(variables)
-        print('\n')
-
-        v = len(variables)
-        if v==0:
-            return table
-        else:
-            ask = AskVariables(parent=self.w.win, variables=variables)
-            if ask.ShowModal() == wx.ID_OK:
-                print("Got values")
-                values = ask.GetValues()
-            ask.Destroy()
-
-            for i in range(v):
-                r = var_pos[i][0]
-                c = var_pos[i][1]
-                val = values[i]
-                row = table[r]
-                table[r] = row[0:c] + (val,) + row[c+1:10]
-
-        print(table)
-
-        return table
 
 
-class AskVariables(wx.Dialog):
-
-    def __init__(self, parent=None, variables=None):
-            super(AskVariables, self).__init__(parent, style=wx.SYSTEM_MENU|wx.CAPTION)
-            self.variables = variables
-            self.InitUI()
-            self.SetTitle("Symbolic Variables Detected")
-#            self.SetSizerAndFit(self.mainSizer)
-
-    def InitUI(self):
-        self.mainSizer = wx.BoxSizer(wx.VERTICAL)
-
-        #Instruction
-        instr = wx.StaticText(self, label="Some symbolic variables were detected\nwhen loading the .par file. Please provide\nnumerical values for the following:")
-
-        #create scrolling input panel
-        from wx.lib.scrolledpanel import ScrolledPanel
-        self.p = ScrolledPanel(self)
-        
-        scrSizer = wx.BoxSizer(wx.VERTICAL)
-        scrGrid = wx.GridBagSizer(hgap=5, vgap=5)
-
-        self.value_inputs = []
-        for v in range(len(self.variables)):
-##            var_lbl = wx.StaticText(self.p, size=(100,22), label=self.variables[v]+":", style=wx.ALIGN_RIGHT)
-##            var_val = wx.SpinCtrlDouble(self.p, initial=0, value="0", size=(100,-1))
-##            hSizer = wx.BoxSizer(wx.HORIZONTAL)
-##            hSizer.Add(var_lbl, 0, flag=wx.ALL, border=5)
-##            hSizer.Add(var_val, 0, flag=wx.ALL, border=5)
-##            scrSizer.Add(hSizer,0)
-
-            var_lbl = wx.StaticText(self.p, label=self.variables[v]+":", style=wx.ALIGN_RIGHT)
-            var_val = wx.SpinCtrlDouble(self.p, initial=0, value="0", size=(100,-1))
-            scrGrid.Add(var_lbl, pos=(v,0), flag=wx.ALIGN_RIGHT)
-            scrGrid.Add(var_val, pos=(v,1), flag=wx.ALIGN_LEFT)
-            self.value_inputs.append(var_val)
-        
-        scrSizer.Add(scrGrid, 0, wx.ALIGN_CENTRE)
-        self.p.SetSizer(scrSizer)
-        self.p.SetBestSize((250,150))
-#        self.p.SetAutoLayout(1)
-#        self.p.SetupScrolling(0,1)
-        self.p.SetScrollbars(0,1,1,1)
-
-        #OK button
-        okButton = wx.Button(self, wx.ID_OK, "OK")
-        okButton.Bind(wx.EVT_BUTTON, self.OnOK)
-
-        #order elements
-        self.mainSizer.Add(instr, flag=wx.ALL|wx.ALIGN_CENTER, border = 20)
-        self.mainSizer.AddSpacer(10)
-        self.mainSizer.Add(self.p, flag=wx.ALIGN_CENTER)
-        self.mainSizer.AddSpacer(20)
-        self.mainSizer.Add(okButton, flag=wx.ALL|wx.ALIGN_RIGHT, border = 20)
-
-        self.SetSizerAndFit(self.mainSizer)
-
-    def OnOK(self, e):
-        print("OK pressed")
-        self.values = []
-        for v in range(len(self.variables)):
-            self.values.append(self.value_inputs[v].GetValue())
-        self.EndModal(wx.ID_OK)
-
-    def GetValues(self):
-        return self.values
 
             
 
