@@ -2,9 +2,7 @@
 2. Upper limit of SpinCtrl
 3. Cancel Button Enter Symbolic->Numerical
 4. Orthoglide parser bug
-5. Mobile robot example
-6. Add tests
-7. Dynamic parameters
-8. Bug when world frame is selected then Edit button pressed, then Display pressed again
-9. Save configuration button
-10. Solve Active -> Solve All
+5. Add tests
+6. Dynamic parameters
+7. Save configuration button
+8. Visualize pressed a lot of time in the short period of time

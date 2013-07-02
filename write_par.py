@@ -67,6 +67,21 @@ class ParWriter:
         return output
 
     @classmethod
+    def other_string(cls, NL, NJ):
+        """Writes the rest of the string which includes dynamic parameters
+        velocities, accelerations, gravity, etc.
+        """
+        output = '(* Dynamic parameters and external forces *)\n'
+        dynamic = ['XX', 'XY', 'XZ', 'YY', 'YZ', 'ZZ', 'MX', 'MY', 'MZ', 'M', 'IA', 'FV', 'FS', 'FX', 'FY', 'FZ', 'CX', 'CX', 'CZ']
+        output += '\n'.join([var + ' = {\n        ' + (','.join('%s%d' % (var, x) for x in range(1, NL + 1))) + '}' for var in dynamic])
+        output += '\n\n(* Joints velocity and acceleration *)\n'
+        vel_ac = ['QP', 'QDP']
+        output += '\n'.join([var + ' = {\n        ' + (','.join('%s%d' % (var, x) for x in range(1, NJ + 1))) + '}' for var in vel_ac])
+        output += '\n\n(* Speed and acceleration of the base *)\nW0 = {\n        0,0,0}\nWP0  = {\n        0,0,0}\nV0  = {\n        0,0,0}\nVP0  = {\n        0,0,0}\n\n'
+        output += '(* Matrix Z *)\nZ = {\n        1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}\n\n(* Acceleration of gravity *)\nG = {\n        G1,G2,G3}\n\n(* End of definition *)\n'
+        return output
+
+    @classmethod
     def par_string(c, table, file_name=None, robot_name=None):
         """Generates all the content of the file
         """
