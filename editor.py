@@ -85,7 +85,7 @@ class EditingWindow():
              (None, None, None, None),
              (wx.ID_SAVE, '&Save', 'Save the current file', self.CheckIfNew),
              (wx.ID_SAVEAS, 'Save &As', 'Save the file under a different name',
-                self.OnSave),
+                self.OnSaveAs),
              (None, None, None, None),
              (wx.ID_EXIT, 'E&xit', 'Terminate the program', self.OnExit)]:
             if id == None:
