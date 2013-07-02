@@ -807,7 +807,7 @@ class display(cvisual.display_kernel):
         if _plat == 'Macintosh' and self.keyboard.cmd:
             prefix += 'cmd+'
         return prefix+k
-    
+
     def _OnKeyDown(self, evt):
         k = self._ProcessChar(evt)
         if k != 'invalid key':
@@ -874,7 +874,8 @@ def _close_final(): # There is a window, or an activated display
     if _do_loop:
         _do_loop = False # make sure we don't trigger this twice
         while True: # at end of user program, wait for user to close the program
-            rate(1000)
+            rate(30)
+            #sleep(0.05)
             _Interact()
     _wx.Exit()
 

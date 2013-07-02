@@ -24,7 +24,7 @@ __title__ = "DrawBot v 1.0 beta for Symoro+"
 __author__ = "Izzat Mukhanov <izzatbek@gmail.com>"
 
 from kinematics import Kinematics
-from robots import table_rx90 as table
+from robots import table_akr3000 as table
 from create_window import display as c_display
 from visual import *
 import wx
@@ -85,10 +85,11 @@ class Graphics:
         self.cb_end_effs.SetValue(True)
         self.cb_end_effs.Bind(wx.EVT_CHECKBOX, self.end_effector_change)
         gridControl.Add(self.cb_end_effs, pos=(1,0), flag=wx.ALIGN_CENTER_VERTICAL)
-        cb_world = wx.CheckBox(self.p, label="Base frame")
-        cb_world.SetValue(False)
-        cb_world.Bind(wx.EVT_CHECKBOX, self.world_frame)
-        gridControl.Add(cb_world, pos=(2,0), flag=wx.ALIGN_CENTER_VERTICAL)
+
+        self.cb_world = wx.CheckBox(self.p, label="Base frame")
+        self.cb_world.SetValue(False)
+        self.cb_world.Bind(wx.EVT_CHECKBOX, self.show_world_frame)
+        gridControl.Add(self.cb_world, pos=(2,0), flag=wx.ALIGN_CENTER_VERTICAL)
 
         self.tButton = wx.ToggleButton(self.p, label="All Frames")
         self.tButton.SetValue(True)
@@ -102,6 +103,31 @@ class Graphics:
         btnRandom = wx.Button(self.p, label="Random")
         btnRandom.Bind(wx.EVT_BUTTON, self.find_random)
         gridControl.Add(btnRandom, pos=(8,0), flag=wx.ALIGN_CENTER)
+
+        self.opacity = 1.
+        s = wx.Slider(self.p, size=(100,20), minValue=0, maxValue=99, value=99)
+        s.Bind(wx.EVT_SCROLL, self.change_opacity)
+        label = wx.StaticText(self.p, label='Joint opacity')
+        gridControl.Add(label, pos=(5,0), flag=wx.ALIGN_CENTER)
+        gridControl.Add(s, pos=(6,0), flag=wx.ALIGN_CENTER)
+
+        self.spin_ctrls = []
+        gridJoints = wx.GridBagSizer(hgap=10, vgap=10)
+        for index, jnt in enumerate(self.kinematics.mjoints):
+            gridJoints.Add(wx.StaticText(self.p, label='q'+str(jnt.j)), pos=(index,0), flag=wx.ALIGN_CENTER_VERTICAL)
+            if jnt.isprismatic():
+                s = wx.SpinCtrlDouble(self.p, size=(70,-1), id=index, min=0, max=self.max_prismatic, value="0")
+            else:
+                s = wx.SpinCtrlDouble(self.p, size=(70,-1), id=index, min=-180, max=180, value="0")
+            s.Bind(wx.EVT_SPINCTRLDOUBLE, self.setq)
+            s.SetDigits(2)
+            if jnt.ispassive():
+                s.Enable(False)
+            self.spin_ctrls.append(s)
+            s.SetIncrement(5)
+            gridJoints.Add(s, pos=(index,1), flag=wx.ALIGN_CENTER_VERTICAL)
+
+        index += 1
 
         self.solve_loops = self.kinematics.contains_loops()
         self.contains_loops = self.solve_loops
@@ -117,34 +143,16 @@ class Graphics:
             self.lblConvergence.SetFont(font)
             gridControl.Add(self.lblConvergence, pos=(10,0), flag=wx.ALIGN_CENTER)
 
-            self.btnActive = wx.Button(self.p, label="Solve Active")
+            self.btnActive = wx.Button(self.p, label="Solve All")
             self.btnActive.Bind(wx.EVT_BUTTON, self.find_close)
             gridControl.Add(self.btnActive, pos=(11,0), flag=wx.ALIGN_CENTER)
 
             self.btnReset.SetLabelText("Reset Active")
 
-        self.opacity = 1.
-        s = wx.Slider(self.p, size=(100,20), minValue=0, maxValue=99, value=99)
-        s.Bind(wx.EVT_SCROLL, self.change_opacity)
-        label = wx.StaticText(self.p, label='Joint opacity')
-        gridControl.Add(label, pos=(5,0), flag=wx.ALIGN_CENTER)
-        gridControl.Add(s, pos=(6,0), flag=wx.ALIGN_CENTER)
-
-        self.spin_ctrls = []
-        gridJoints = wx.GridBagSizer(hgap=10, vgap=10)
-        for i, jnt in enumerate(self.kinematics.mjoints):
-            gridJoints.Add(wx.StaticText(self.p, label='q'+str(jnt.j)), pos=(i,0), flag=wx.ALIGN_CENTER_VERTICAL)
-            if jnt.isprismatic():
-                s = wx.SpinCtrlDouble(self.p, size=(70,-1), id=i, min=0, max=self.max_prismatic, value="0")
-            else:
-                s = wx.SpinCtrlDouble(self.p, size=(70,-1), id=i, min=-180, max=180, value="0")
-            s.Bind(wx.EVT_SPINCTRLDOUBLE, self.setq)
-            s.SetDigits(2)
-            if jnt.ispassive():
-                s.Enable(False)
-            self.spin_ctrls.append(s)
-            s.SetIncrement(5)
-            gridJoints.Add(s, pos=(i,1), flag=wx.ALIGN_CENTER_VERTICAL)
+            btnSaveConf = wx.Button(self.p, label="Save Values")
+            btnSaveConf.Bind(wx.EVT_BUTTON, self.save_configuration)
+            gridJoints.Add(btnSaveConf, pos=(index,0), flag=wx.ALIGN_CENTER)
+            gridJoints.SetItemSpan(btnSaveConf, wx.GBSpan(1,2))
 
         choices = []
         for i, jnt in enumerate(self.kinematics.joints):
@@ -296,9 +304,9 @@ class Graphics:
                     self.prismatic_links.append((cyl, jnt))
 
             if jnt.isprismatic():
-                obj = box(frame=f, axis=(self.len_obj,0,0), height=self.len_obj/4., width=self.len_obj/4., opacity=self.opacity, color= color.orange)
+                obj = box(frame=f, axis=(self.len_obj,0,0), height=self.len_obj/4., width=self.len_obj/4, opacity=self.opacity, color= color.orange)
             elif jnt.isrevolute():
-                obj = cylinder(frame=f, pos=(-self.len_obj/2,0,0), axis=(self.len_obj,0,0), radius=self.len_obj/8., opacity=self.opacity, color=color.yellow)
+                obj = cylinder(frame=f, pos=(-self.len_obj/2,0,0), axis=(self.len_obj,0,0), radius=self.len_obj/8. -0.01, opacity=self.opacity, color=color.yellow)
             else:
                 obj = sphere(frame=f, radius=self.len_obj/6., color=color.green, opacity=self.opacity)
             self.put_frame(f, i)
@@ -359,10 +367,10 @@ class Graphics:
         for obj in self.joint_objs:
             obj.opacity = self.opacity
 
-    def world_frame(self, evt):
+    def show_world_frame(self, evt):
         """Adds or removes the frame with labels for the base frame.
         """
-        if evt.EventObject.Value:
+        if self.cb_world.Value:
             self.world_frame = frame(axis=(0,0,1), pos=(0,0,0), up=(1,0,0))
             arrow(frame=self.world_frame, axis=(self.len_obj,0,0), color=color.red, shaftwidth=self.len_obj/25.)
             label(frame=self.world_frame, text="z0", pos=(self.len_obj,0), opacity=0, yoffset=3, color=color.black, border=0, box=False, line=False)
@@ -370,7 +378,6 @@ class Graphics:
             label(frame=self.world_frame, text="x0", pos=(0,self.len_obj), opacity=0, yoffset=3, color=color.black, border=0, box=False, line=False)
         else:
             self.world_frame.visible = False
-            del self.world_frame
 
     def show_all_frames(self, evt):
         """Shows or hides all the frames (Toggle button event handler
@@ -380,8 +387,6 @@ class Graphics:
         self.check_list.SetChecked(indices)
 
     def update_spin_controls(self):
-        from random import random
-        print random()
         for i, jnt in enumerate(self.kinematics.mjoints):
             self.spin_ctrls[i].Value = jnt.q*180/pi if jnt.isrevolute() else jnt.q
 
@@ -435,6 +440,18 @@ class Graphics:
         self.tButton.Value = False
         self.check_list.DeselectAll()
 
+    def save_configuration(self, evt):
+        from visual.filedialog import save_file
+        fd = save_file('.conf')
+        if fd:
+            name = fd.name[fd.name.rfind('\\') + 1:]
+            string = '(*{0:^25}*)\n(*{1:^25}*)\n\n'.format('Joints Configuration', name)
+            string += '\n'.join(('Joint {0:<10}{1:<10}{2:.2f}'.format(i + 1, jnt.mu, jnt.q)) for i, jnt in enumerate(self.kinematics.mjoints))
+            fd.write(string)
+            fd.close()
+            return True
+        return False
+
     def setq(self, evt):
         """Sets joint values from the spin-controls
         """
@@ -453,9 +470,9 @@ class Graphics:
         Expanded view - joints are shifted along z if their frames coincide.
         """
         for obj in self.scene.objects:
-            if obj != self.world_frame and obj.frame != self.world_frame:
-                obj.visible = False
-                del obj
+            obj.visible = False
+            del obj
+        self.show_world_frame(None)
         self.init_lists()
         self.draw(evt.IsChecked())
 

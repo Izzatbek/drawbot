@@ -231,7 +231,7 @@ table_exam2 = (
 )
 
 l5 = 10
-r1 = 10
+r1 = 15
 r2 = 10
 table_dr = (
     # antecedant, sameas, mu, sigma,
@@ -239,17 +239,17 @@ table_dr = (
     (0, 0, AJOINT, PRISMATIC_JOINT,
         -pi/2, 0, -pi/2, 0, -pi/2, r1),
     (1, 0, AJOINT, PRISMATIC_JOINT,
-        0, 0, pi/2, 0, pi/2, r2),
+        0, 0, pi/2, 0, pi/2, 0),
     (2, 0, AJOINT, REVOLUTE_JOINT,
-        0, 0, 0, 0, 0, 0),
+        0, 0, pi/2, 0, 0, 0),
     (3, 0, AJOINT, REVOLUTE_JOINT,
-        0, 0, 0, 0, 0, 0),
+        0, 0, -pi/2, 0, 0, 0),
     (3, 0, AJOINT, REVOLUTE_JOINT,
-        0, 0, 0, 0, 0, l5),
+        0, 0, -pi/2, 0, 0, l5),
     (3, 0, AJOINT, REVOLUTE_JOINT,
-        0, 0, 0, 0, 0, -l5),
+        0, 0, -pi/2, 0, 0, -l5),
     (4, 0, PJOINT, FIXED_JOINT,
-        -0.5, 0, 0, -10, 0, 0)
+        5*pi/11, 0, 0, -10, 0, 0)
 )
 
 table_inner_loop = (
